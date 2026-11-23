@@ -1,0 +1,14 @@
+@font-face { font-family: Lato; src: url('fonts/lato-regular.woff2') format('woff2'); font-weight: 400; font-display: block; }
+@font-face { font-family: Lato; src: url('fonts/lato-semibold.woff2') format('woff2'); font-weight: 600; font-display: block; }
+@font-face { font-family: Lato; src: url('fonts/lato-bold.woff2') format('woff2'); font-weight: 700; font-display: block; }
+:root {
+  --font: Lato, Arial, sans-serif;
+  --w-regular: 400; --w-medium: 600; --w-bold: 700;
+  --accent: #006cfd; --accent-ink: #fff;
+  --ink: #152242; --ink2: #737a8e; --ink3: #a0a5b2;
+  --line: #e5e7eb; --line2: #dadde5; --soft: #f4f5f8;
+  --dark: #152242; --surface: #fff; --bg: #f4f7fc;
+  --dim: 21,34,66; --sub-bg: rgba(21,34,66,.86);
+  --cursor: #006cfd; --r-app: 0;
+  --ring-stops: #006cfd, #3686ff, #9bc3ff, #006cfd;
+}

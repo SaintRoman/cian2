@@ -88,6 +88,8 @@ import { Button, Input, Checkbox, Select, Badge, Modal } from '@/ui';
 
 Оригинальные CSS-классы применяются к Button, Input, Checkbox, Radio, Badge и Skeleton. Типографика повторяет измеренную шкалу. Select, Tooltip, Modal и Spinner — локальные реализации поведения на тех же токенах: они не заявляют полную совместимость со всеми внутренними адаптивными паттернами Циана. Справочник `/reference/` позволяет сравнить источники с адаптацией.
 
+Промо мобильной главной (15 секунд, версии с фоновой музыкой и без звука): [сценарий, исходники и пересборка](../motion/home-promo/README.md). Превью видеоряда при запущенном проекте: `/motion/home-promo/video.html?preview=1`.
+
 Имена цветов берём из семантических токенов: например `--control-main-primary-default`, `--text-primary-default`, `--background-secondary`, `--stroke-control-focused`. В каталоге доступны светлая и тёмная темы; приложение прототипа использует светлую.
 
 Тестовый runner отключает встроенный Node Web Storage, чтобы Vitest использовал браузерный storage jsdom; это предотвращает конфликт на Node.js 25+. На приложение в браузере настройка не влияет.

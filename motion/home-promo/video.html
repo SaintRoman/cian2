@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Циан · Продолжите поиск</title>
+  <link rel="stylesheet" href="brand/brand.css">
+  <link rel="stylesheet" href="base.css">
+  <script src="plan.js"></script><script src="cues.js"></script><script src="tmap.js"></script><script src="engine.js"></script>
+  <style>
+    #frame { background: #f4f7fc; }
+    .backdrop { position:absolute; width:1600px; height:1600px; top:-260px; left:160px; border-radius:50%; background:#e6f0ff; }
+    .backdrop::after { content:''; position:absolute; inset:250px; border:1px solid #cde1ff; border-radius:50%; }
+    #app { overflow:visible; background:transparent; box-shadow:none; will-change:transform; }
+    #device { position:absolute; inset:-10px; border:10px solid #152242; border-radius:42px; background:#fff; box-shadow:0 26px 70px -22px #15224245; }
+    #screen { position:absolute; inset:0; overflow:hidden; border-radius:31px; background:#fff; }
+    #screen img { position:absolute; left:0; top:0; width:390px; max-width:none; transform-origin:0 0; will-change:transform; backface-visibility:hidden; }
+    #app2 { overflow:visible; }
+    #cursor { display:none!important; }
+    #touch { position:absolute; left:312.8125px; top:698.5px; width:20px; height:20px; margin:-10px; border:2px solid #006cfd; border-radius:50%; background:#006cfd22; }
+    #touchRing { position:absolute; left:312.8125px; top:698.5px; width:58px; height:58px; margin:-29px; border:2px solid #006cfd; border-radius:50%; }
+    #savedFocus { position:absolute; left:19px; top:651px; width:352px; height:95px; border:1.5px solid #006cfd; border-radius:17px; }
+    #finalCopy { position:absolute; z-index:6; left:230px; top:300px; width:800px; }
+    #finalCopy img { width:220px; height:88px; object-fit:contain; object-position:left center; mix-blend-mode:multiply; margin-bottom:34px; }
+    #finalCopy h1 { font-size:96px; line-height:1.03; font-weight:700; letter-spacing:-.045em; color:#152242; }
+    #finalCopy h1 span { color:#006cfd; }
+    #frameControls { position:absolute; left:0; top:1080px; width:1920px; height:60px; display:flex; align-items:center; gap:16px; padding:10px 24px; background:#152242; color:white; font:18px Lato; }
+    #frameTime { width:160px; padding:4px 8px; font:inherit; }
+    #frameControls a { color:white; }
+  </style>
+</head>
+<body>
+  <div id="frame">
+    <div class="backdrop"></div>
+    <div id="stage" class="layer"><div id="app"><div id="device"></div><div id="screen"><img id="homeScreen" src="assets/home.jpg" alt="Настоящая главная мобильного прототипа Циана"><img id="resultsScreen" src="assets/results.jpg" alt="Настоящая выдача сохранённого поиска"></div></div></div>
+    <div id="stage2" class="layer"><div id="app2"><div id="savedFocus"></div><div id="touchRing"></div><div id="touch"></div></div></div>
+    <div id="finalCopy"><img src="brand/logos/prototype-wordmark.png" alt="Циан"><h1>Продолжите<br><span>поиск</span></h1></div>
+  </div>
+  <div id="frameControls"><label for="frameTime">Момент ролика, секунд</label><input id="frameTime" type="number" min="0" max="15" step="any" value="0"><a href="?preview=1">Открыть проигрыватель</a></div>
+  <script>
+    const times = PLAN.events;
+    E.start({
+      setup(E) {
+        E.measureAt(0);
+        const screen = E.rect('screen');
+        const focus = E.rect('savedFocus');
+        const focusY = focus.cy - 55;
+        E.camera([
+          [0,screen.cx,screen.cy,1.05], [.7,screen.cx,screen.cy,1.08],
+          [times.zoom_start,screen.cx,screen.cy,1.1],
+          [4.4,focus.cx,focusY,2.5], [6.9,focus.cx,focusY,2.54], [7.4,screen.cx,355,1.48],
+          [8.15,screen.cx,355,1.48], [11.65,screen.cx,360,1.52],
+          [13.3,screen.cx,screen.cy,1.06], [15,screen.cx,screen.cy,1.06]
+        ], []);
+      },
+      scene(t,E) {
+        const {$,lin,eio,eout,css,MEAS} = E;
+        const intro = MEAS ? 1 : eout(lin(t,0,.6));
+        const end = eio(lin(t,times.final_start,times.final_hold));
+        E.anchor([960+415*end,540+(1-intro)*34]);
+        $('app').style.opacity = intro;
+        const p = eio(lin(t,times.navigation_start,times.navigation_end));
+        css($('homeScreen'),{opacity:1-p,transform:`translateX(${-95*p}px)`});
+        css($('resultsScreen'),{opacity:p>0?1:0,transform:`translateX(${390*(1-p)}px)`});
+        const highlight = eout(lin(t,4.3,4.7))*(1-eio(lin(t,7.05,7.2)));
+        $('savedFocus').style.opacity = MEAS ? 1 : highlight*.75;
+        const tap = times.tap;
+        const pointer = eout(lin(t,tap-.6,tap-.2))*(1-eio(lin(t,tap+.35,tap+.6)));
+        css($('touch'),{opacity:MEAS?0:pointer,transform:`scale(${1-.25*Math.sin(Math.PI*lin(t,tap-.06,tap+.16))})`});
+        const ring = lin(t,tap,tap+.55);
+        css($('touchRing'),{opacity:MEAS?0:(t>tap&&t<tap+.55?(1-ring)*.85:0),transform:`scale(${.3+eout(ring)})`});
+        css($('finalCopy'),{opacity:end,transform:`translateY(${(1-end)*32}px)`});
+      }
+    });
+    document.getElementById('frameTime').addEventListener('input',event=>{
+      const t=Number(event.target.value);
+      if(window.READY&&Number.isFinite(t)) window.render(Math.max(0,Math.min(15,t)));
+    });
+  </script>
+</body>
+</html>
